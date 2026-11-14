@@ -3,11 +3,11 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { ButtonLink } from "@/components/ui/button";
 import { accentFor, Tag } from "@/components/ui/misc";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Parallax } from "@/components/motion/parallax";
 import { Magnetic } from "@/components/motion/magnetic";
 import { SectionHeader } from "@/components/public/section";
-import { MetricCard, ProjectCard, TestimonialCard, primaryMetric } from "@/components/public/cards";
+import { MetricLedger, PrimaryResult, ProjectCard, TestimonialCard, primaryMetric } from "@/components/public/cards";
 import { displayClient, formatDateRange } from "@/lib/utils/format";
 import type { HomeConfig } from "@/lib/validations/content";
 import type {
@@ -26,12 +26,11 @@ export function ExpertiseStrip({ config }: { config: HomeConfig<"expertise"> }) 
   if (!config.items.length) return null;
   return (
     <section aria-label="Areas of expertise" className="relative border-y border-line bg-ink-raised/50">
-      <Stagger as="ol" className="container-page grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="container-page grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {config.items.map((item, i) => {
           const a = accentFor(item.key);
           return (
-            <StaggerItem
-              as="li"
+            <li
               key={`${item.key}-${item.label}`}
               className={cn(
                 "relative flex flex-col gap-1.5 py-7 sm:px-6 lg:py-9",
@@ -47,11 +46,61 @@ export function ExpertiseStrip({ config }: { config: HomeConfig<"expertise"> }) 
                 <span className="font-display text-lg font-semibold tracking-tight">{item.label}</span>
               </span>
               {item.description ? <span className="text-sm text-muted">{item.description}</span> : null}
-            </StaggerItem>
+            </li>
           );
         })}
-      </Stagger>
+      </ol>
     </section>
+  );
+}
+
+/** Services as stations on one connected line (homepage and services index). */
+export function ServiceRailList({ services, className }: { services: ServiceWithChildren[]; className?: string }) {
+  return (
+    <ol className={cn("relative", className)}>
+      <span aria-hidden className="absolute bottom-10 left-[0.3125rem] top-10 w-px bg-gradient-to-b from-build via-automate to-create opacity-50 md:left-[0.4375rem]" />
+      {services.map((service) => {
+        const a = accentFor(service.accent_key);
+        return (
+          <li key={service.id}>
+              <Link
+                href={`/services/${service.slug}`}
+                data-track="cta_click"
+                data-track-label={`home service: ${service.title}`}
+                className="group relative grid gap-4 border-b border-line py-9 pl-9 transition-colors md:grid-cols-12 md:gap-8 md:py-12 md:pl-14"
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute left-0 top-[2.85rem] size-[0.6875rem] rounded-full ring-4 ring-ink transition-transform duration-300 group-hover:scale-125 md:top-[3.9rem] md:size-[0.9375rem]",
+                    a.dot,
+                  )}
+                />
+                <h3 className="type-h2 md:col-span-5">
+                  <span className="transition-colors duration-300 group-hover:text-paper">{service.title}</span>
+                </h3>
+                <div className="md:col-span-6">
+                  <p className="text-lg text-muted">{service.short_description}</p>
+                  {service.capabilities.length ? (
+                    <ul className="mt-5 flex flex-wrap gap-2" aria-label={`${service.title} capabilities`}>
+                      {service.capabilities.slice(0, 4).map((c) => (
+                        <li key={c.id} className={cn("rounded-full border px-3 py-1 text-[0.8125rem] text-paper/85", a.border)}>
+                          {c.title}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+                <span className="hidden justify-end md:col-span-1 md:flex">
+                  <span className="inline-flex size-11 items-center justify-center rounded-full border border-line-strong transition-all duration-300 group-hover:border-paper group-hover:bg-paper group-hover:text-ink">
+                    <ArrowUpRight className="size-4" aria-hidden />
+                  </span>
+                </span>
+              </Link>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -74,52 +123,7 @@ export function ServicesRail({ section, services }: { section: HomeSection; serv
             </ButtonLink>
           }
         />
-        <ol className="relative mt-14 md:mt-20">
-          <span aria-hidden className="absolute bottom-10 left-[0.3125rem] top-10 w-px bg-gradient-to-b from-build via-automate to-create opacity-50 md:left-[0.4375rem]" />
-          {services.map((service) => {
-            const a = accentFor(service.accent_key);
-            return (
-              <li key={service.id}>
-                <Reveal>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    data-track="cta_click"
-                    data-track-label={`home service: ${service.title}`}
-                    className="group relative grid gap-4 border-b border-line py-9 pl-9 transition-colors md:grid-cols-12 md:gap-8 md:py-12 md:pl-14"
-                  >
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "absolute left-0 top-[2.85rem] size-[0.6875rem] rounded-full ring-4 ring-ink transition-transform duration-300 group-hover:scale-125 md:top-[3.9rem] md:size-[0.9375rem]",
-                        a.dot,
-                      )}
-                    />
-                    <h3 className="type-h2 md:col-span-5">
-                      <span className="transition-colors duration-300 group-hover:text-paper">{service.title}</span>
-                    </h3>
-                    <div className="md:col-span-6">
-                      <p className="text-lg text-muted">{service.short_description}</p>
-                      {service.capabilities.length ? (
-                        <ul className="mt-5 flex flex-wrap gap-2" aria-label={`${service.title} capabilities`}>
-                          {service.capabilities.slice(0, 4).map((c) => (
-                            <li key={c.id} className={cn("rounded-full border px-3 py-1 text-[0.8125rem] text-paper/85", a.border)}>
-                              {c.title}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </div>
-                    <span className="hidden justify-end md:col-span-1 md:flex">
-                      <span className="inline-flex size-11 items-center justify-center rounded-full border border-line-strong transition-all duration-300 group-hover:border-paper group-hover:bg-paper group-hover:text-ink">
-                        <ArrowUpRight className="size-4" aria-hidden />
-                      </span>
-                    </span>
-                  </Link>
-                </Reveal>
-              </li>
-            );
-          })}
-        </ol>
+        <ServiceRailList services={services} className="mt-14 md:mt-20" />
       </div>
     </section>
   );
@@ -201,10 +205,20 @@ export function FeaturedCaseStudy({ section, caseStudy }: { section: HomeSection
       <Parallax amplitude={60} className="pointer-events-none absolute inset-0">
         <div aria-hidden className="absolute -left-40 top-10 h-[30rem] w-[40rem] rounded-full bg-signal/[0.07] blur-[120px]" />
       </Parallax>
-      <div className="container-page relative grid gap-12 lg:grid-cols-12 lg:gap-16">
-        <div className="lg:col-span-5">
-          <SectionHeader eyebrow={section.eyebrow} heading={section.heading} description={section.description} />
-          <Reveal className="mt-10 border-t border-line pt-8" delay={0.1}>
+      <div className="container-page relative">
+        <SectionHeader eyebrow={section.eyebrow} heading={section.heading} description={section.description} />
+        <div className="mt-12 grid gap-12 border-t border-line pt-10 md:mt-16 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7">
+            {primary ? (
+              <>
+                <PrimaryResult metric={primary} />
+                <MetricLedger metrics={others} className="mt-10" />
+              </>
+            ) : caseStudy.result_headline ? (
+              <p className="type-h2 text-signal">{caseStudy.result_headline}</p>
+            ) : null}
+          </div>
+          <div className="lg:col-span-5">
             <h3 id="home-case" className="type-h3">
               {caseStudy.title}
             </h3>
@@ -228,23 +242,7 @@ export function FeaturedCaseStudy({ section, caseStudy }: { section: HomeSection
             >
               Read the case study
             </ButtonLink>
-          </Reveal>
-        </div>
-        <div className="lg:col-span-7">
-          {primary ? (
-            <Stagger as="div" className="grid gap-4 sm:grid-cols-2">
-              <StaggerItem className="sm:col-span-2">
-                <MetricCard metric={primary} emphasis />
-              </StaggerItem>
-              {others.map((m) => (
-                <StaggerItem key={m.id}>
-                  <MetricCard metric={m} />
-                </StaggerItem>
-              ))}
-            </Stagger>
-          ) : caseStudy.result_headline ? (
-            <p className="type-h2 text-signal">{caseStudy.result_headline}</p>
-          ) : null}
+          </div>
         </div>
       </div>
     </section>
@@ -260,9 +258,9 @@ export function ProcessSection({ section, config }: { section: HomeSection; conf
     <section aria-labelledby="home-process" className="section-y border-t border-line">
       <div className="container-page">
         <SectionHeader id="home-process" eyebrow={section.eyebrow} heading={section.heading} description={section.description} />
-        <Stagger as="ol" className="relative mt-14 grid gap-10 md:mt-20 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        <ol className="relative mt-14 grid gap-10 md:mt-20 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {config.steps.map((step, i) => (
-            <StaggerItem as="li" key={`${step.title}-${i}`} className="relative">
+            <li key={`${step.title}-${i}`} className="relative">
               <div className="flex items-center gap-4">
                 <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line-strong font-display text-sm font-semibold text-signal">
                   {i + 1}
@@ -273,9 +271,9 @@ export function ProcessSection({ section, config }: { section: HomeSection; conf
               </div>
               <h3 className="type-h3 mt-6">{step.title}</h3>
               {step.description ? <p className="mt-3 text-muted">{step.description}</p> : null}
-            </StaggerItem>
+            </li>
           ))}
-        </Stagger>
+        </ol>
       </div>
     </section>
   );
@@ -293,9 +291,9 @@ export function StackSection({ section, profile }: { section: HomeSection; profi
         <div className="lg:col-span-4">
           <SectionHeader id="home-stack" eyebrow={section.eyebrow} heading={section.heading} description={section.description} />
         </div>
-        <Stagger className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-8">
+        <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-8">
           {groups.map((g) => (
-            <StaggerItem key={g.category} className="border-t border-line pt-6">
+            <div key={g.category} className="border-t border-line pt-6">
               <h3 className="font-display text-lg font-semibold">{g.category}</h3>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {g.items.map((item) => (
@@ -304,9 +302,9 @@ export function StackSection({ section, profile }: { section: HomeSection; profi
                   </li>
                 ))}
               </ul>
-            </StaggerItem>
+            </div>
           ))}
-        </Stagger>
+        </div>
       </div>
     </section>
   );
@@ -359,7 +357,7 @@ export function CtaSection({
         className="absolute bottom-[-40%] left-1/2 h-[36rem] w-[60rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(255_181_71/0.13),transparent)]"
       />
       <div className="container-page section-y relative">
-        <Reveal className="max-w-4xl">
+        <div className="max-w-4xl">
           <h2 id="cta-heading" className="type-h1">
             {heading}
           </h2>
@@ -378,7 +376,7 @@ export function CtaSection({
               </ButtonLink>
             ) : null}
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

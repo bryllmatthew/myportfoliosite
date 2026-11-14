@@ -3,7 +3,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/public/section";
 import { RichText } from "@/components/public/rich-text";
-import { CaseStudyCard, MetricCard, primaryMetric } from "@/components/public/cards";
+import { CaseStudyCard, MetricLedger, PrimaryResult, primaryMetric } from "@/components/public/cards";
 import { CtaSection } from "@/components/public/home/sections";
 import { CmsImage } from "@/components/media/cms-image";
 import { MediaGallery, VideoEmbed } from "@/components/media/media-gallery";
@@ -102,34 +102,36 @@ export default async function CaseStudyPage({ params }: Params) {
             ]}
             className="mb-10"
           />
-          <div className="grid gap-12 lg:grid-cols-12">
-            <Reveal className="lg:col-span-7">
-              {cs.result_headline ? (
-                <p className="mb-5 font-display text-xl font-semibold text-signal sm:text-2xl">{cs.result_headline}</p>
-              ) : null}
-              <h1 className="type-h1">{cs.title}</h1>
-              {cs.short_description ? <p className="type-lead mt-6 max-w-2xl">{cs.short_description}</p> : null}
-            </Reveal>
+          <Reveal>
+            {cs.result_headline ? (
+              <p className="mb-5 max-w-3xl font-display text-xl font-semibold text-signal sm:text-2xl">{cs.result_headline}</p>
+            ) : null}
+            <h1 className="type-h1 max-w-4xl">{cs.title}</h1>
+            {cs.short_description ? <p className="type-lead mt-6 max-w-2xl">{cs.short_description}</p> : null}
+          </Reveal>
+
+          <div className="mt-14 grid gap-12 border-t border-line pt-10 lg:grid-cols-12 lg:gap-16">
             {primary ? (
-              <Reveal className="lg:col-span-5" delay={0.15}>
-                <MetricCard metric={primary} emphasis />
-              </Reveal>
+              <div className="lg:col-span-8">
+                <h2 className="sr-only">Results</h2>
+                <PrimaryResult metric={primary} />
+                <MetricLedger metrics={secondary} className="mt-10" />
+              </div>
+            ) : null}
+            {snapshot.length ? (
+              <div className={primary ? "lg:col-span-4" : "lg:col-span-12"}>
+                <h2 className="text-sm font-medium text-subtle">Campaign snapshot</h2>
+                <dl className="mt-4 divide-y divide-line border-y border-line">
+                  {snapshot.map((s) => (
+                    <div key={s.label} className="flex justify-between gap-6 py-3 text-sm">
+                      <dt className="text-muted">{s.label}</dt>
+                      <dd className="text-right text-paper">{s.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             ) : null}
           </div>
-
-          {snapshot.length ? (
-            <Reveal delay={0.1}>
-              <h2 className="sr-only">Campaign snapshot</h2>
-              <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-line pt-8 md:grid-cols-5">
-                {snapshot.map((s) => (
-                  <div key={s.label}>
-                    <dt className="text-sm text-subtle">{s.label}</dt>
-                    <dd className="mt-1 text-paper">{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
-          ) : null}
         </div>
       </section>
 
@@ -145,32 +147,15 @@ export default async function CaseStudyPage({ params }: Params) {
         </div>
       ) : null}
 
-      {secondary.length ? (
-        <section aria-labelledby="metrics" className="section-y">
-          <div className="container-page">
-            <h2 id="metrics" className="type-h2">
-              The numbers
-            </h2>
-            <Stagger as="div" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {secondary.map((m) => (
-                <StaggerItem key={m.id}>
-                  <MetricCard metric={m} />
-                </StaggerItem>
-              ))}
-            </Stagger>
-          </div>
-        </section>
-      ) : null}
-
-      <article aria-label="Campaign story" className="container-page pb-16">
+      <article aria-label="Campaign story" className="container-page section-y !pt-16">
         {STORY.map(({ key, title }) =>
           cs[key]?.trim() ? (
-            <Reveal key={key} as="section" className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
+            <section key={key} className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
               <h2 className="type-h3 md:col-span-4">{title}</h2>
               <div className="md:col-span-8">
                 <RichText content={cs[key]} />
               </div>
-            </Reveal>
+            </section>
           ) : null,
         )}
       </article>

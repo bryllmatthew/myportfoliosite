@@ -88,16 +88,16 @@ export default async function ProjectPage({ params }: Params) {
         <div aria-hidden className="dot-grid dot-grid-fade absolute inset-0" />
         <div className="container-page relative">
           <Breadcrumbs items={[{ name: "My Work", path: "/work" }, { name: project.title, path: `/work/${project.slug}` }]} className="mb-10" />
-          <Reveal>
+          <div>
             {project.categories.length ? (
               <p className={`mb-5 text-sm font-medium ${a.text}`}>{project.categories.map((c) => c.name).join(", ")}</p>
             ) : null}
             <h1 className="type-h1 max-w-5xl">{project.title}</h1>
             {project.short_description ? <p className="type-lead mt-6 max-w-2xl">{project.short_description}</p> : null}
-          </Reveal>
+          </div>
 
           {facts.length ? (
-            <Reveal delay={0.1}>
+            <div>
               <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-line pt-8 md:grid-cols-4">
                 {facts.map((f) => (
                   <div key={f.label}>
@@ -106,7 +106,7 @@ export default async function ProjectPage({ params }: Params) {
                   </div>
                 ))}
               </dl>
-            </Reveal>
+            </div>
           ) : null}
 
           {project.external_url || project.github_url ? (
@@ -128,6 +128,7 @@ export default async function ProjectPage({ params }: Params) {
         </div>
       </section>
 
+      {heroIsVideo || heroImage ? (
       <div className="container-page">
         {heroIsVideo && project.hero_media_url ? (
           <VideoEmbed url={project.hero_media_url} title={`${project.title} video`} />
@@ -138,19 +139,19 @@ export default async function ProjectPage({ params }: Params) {
               alt={project.cover_image_alt || ""}
               sizes="(min-width: 1280px) 1200px, 100vw"
               priority
-              placeholderLabel={project.title}
               accent={accent}
               quality={90}
             />
           </ParallaxMedia>
         )}
       </div>
+      ) : null}
 
       <article aria-label="Project story" className="container-page section-y">
         <Story id="challenge" title="The challenge" content={project.challenge} />
         <Story id="solution" title="The solution" content={project.solution} />
         {project.role_description || project.responsibilities.length ? (
-          <Reveal as="section" className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
+          <section className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
             <h2 className="type-h3 md:col-span-4">My role</h2>
             <div className="md:col-span-8">
               <RichText content={project.role_description} />
@@ -164,10 +165,10 @@ export default async function ProjectPage({ params }: Params) {
                 </ul>
               ) : null}
             </div>
-          </Reveal>
+          </section>
         ) : null}
         {project.technologies.length ? (
-          <Reveal as="section" className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
+          <section className="grid gap-6 border-t border-line py-12 md:grid-cols-12 md:py-16">
             <h2 className="type-h3 md:col-span-4">Stack and tools</h2>
             <ul className="flex flex-wrap gap-2 md:col-span-8">
               {project.technologies.map((t) => (
@@ -176,7 +177,7 @@ export default async function ProjectPage({ params }: Params) {
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </section>
         ) : null}
         <Story id="outcome" title="The outcome" content={project.outcome} />
       </article>

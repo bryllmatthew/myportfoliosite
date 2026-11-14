@@ -24,7 +24,7 @@ export function SectionHeader({ eyebrow, heading, description, action, className
   const Heading = as;
   if (!heading && !eyebrow && !description) return null;
   return (
-    <Reveal className={cn("flex flex-col gap-6 md:flex-row md:items-end md:justify-between", className)}>
+    <div className={cn("flex flex-col gap-6 md:flex-row md:items-end md:justify-between", className)}>
       <div className="max-w-3xl">
         {eyebrow ? (
           <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-signal">
@@ -40,7 +40,7 @@ export function SectionHeader({ eyebrow, heading, description, action, className
         {description ? <p className="type-lead mt-5 max-w-2xl">{description}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
-    </Reveal>
+    </div>
   );
 }
 

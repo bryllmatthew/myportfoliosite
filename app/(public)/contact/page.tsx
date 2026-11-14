@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ArrowUpRight, CalendarDays, Clock, Mail, MapPin, Phone } from "lucide-react";
 import { PageHero } from "@/components/public/section";
 import { ContactForm } from "@/components/forms/contact-form";
-import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { getContactSettings, getPageSettings, getProfile, getServiceOptions, getSocialLinks } from "@/lib/queries/public";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -35,7 +34,7 @@ export default async function ContactPage() {
 
       <section aria-label="Contact" className="pb-28">
         <div className="container-page grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <Reveal className="lg:col-span-7">
+          <div className="lg:col-span-7">
             <div className="rounded-[var(--radius-card)] border border-line bg-surface/50 p-6 sm:p-8">
               <h2 className="type-h3 mb-6">Send a message</h2>
               <ContactForm
@@ -45,9 +44,9 @@ export default async function ContactPage() {
                 fallbackEmail={email}
               />
             </div>
-          </Reveal>
+          </div>
 
-          <Reveal className="flex flex-col gap-10 lg:col-span-5" delay={0.1}>
+          <div className="flex flex-col gap-10 lg:col-span-5">
             {page?.intro && contact?.contact_intro ? <p className="text-lg text-muted">{contact.contact_intro}</p> : null}
 
             <div>
@@ -120,7 +119,7 @@ export default async function ContactPage() {
                 </ul>
               </div>
             ) : null}
-          </Reveal>
+          </div>
         </div>
       </section>
     </>

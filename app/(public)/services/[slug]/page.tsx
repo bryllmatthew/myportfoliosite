@@ -92,11 +92,11 @@ export default async function ServicePage({ params }: Params) {
       {service.overview || service.outcomes.length ? (
         <section aria-label="Overview" className="section-y">
           <div className="container-page grid gap-14 lg:grid-cols-12">
-            <Reveal className="lg:col-span-7">
+            <div className="lg:col-span-7">
               <RichText content={service.overview} className="text-lg" />
-            </Reveal>
+            </div>
             {service.outcomes.length ? (
-              <Reveal className="lg:col-span-4 lg:col-start-9" delay={0.1}>
+              <div className="lg:col-span-4 lg:col-start-9">
                 <h2 className="font-display text-xl font-semibold">Problems this solves</h2>
                 <ul className="mt-6 space-y-4">
                   {service.outcomes.map((o) => (
@@ -106,7 +106,7 @@ export default async function ServicePage({ params }: Params) {
                     </li>
                   ))}
                 </ul>
-              </Reveal>
+              </div>
             ) : null}
           </div>
         </section>
@@ -117,14 +117,14 @@ export default async function ServicePage({ params }: Params) {
         <section aria-labelledby="capabilities" className="section-y border-t border-line">
           <div className="container-page">
             <SectionHeader id="capabilities" heading="What I can take on" />
-            <Stagger as="ul" className="mt-12 grid overflow-hidden rounded-[var(--radius-card)] border-l border-t border-line sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-12 grid overflow-hidden rounded-[var(--radius-card)] border-l border-t border-line sm:grid-cols-2 lg:grid-cols-3">
               {service.capabilities.map((c) => (
-                <StaggerItem as="li" key={c.id} className="border-b border-r border-line p-6 sm:p-7">
+                <li key={c.id} className="border-b border-r border-line p-6 sm:p-7">
                   <h3 className="font-display text-lg font-semibold">{c.title}</h3>
                   {c.description ? <p className="mt-2 text-muted">{c.description}</p> : null}
-                </StaggerItem>
+                </li>
               ))}
-            </Stagger>
+            </ul>
           </div>
         </section>
       ) : null}
@@ -134,7 +134,7 @@ export default async function ServicePage({ params }: Params) {
         <section aria-label="Deliverables and tools" className="section-y border-t border-line">
           <div className="container-page grid gap-14 lg:grid-cols-2">
             {service.deliverables.length ? (
-              <Reveal>
+              <div>
                 <h2 className="type-h3">What you get</h2>
                 <ul className="mt-6 space-y-3">
                   {service.deliverables.map((d) => (
@@ -144,10 +144,10 @@ export default async function ServicePage({ params }: Params) {
                     </li>
                   ))}
                 </ul>
-              </Reveal>
+              </div>
             ) : null}
             {service.tools.length ? (
-              <Reveal delay={0.1}>
+              <div>
                 <h2 className="type-h3">Tools and technology</h2>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {service.tools.map((t) => (
@@ -156,7 +156,7 @@ export default async function ServicePage({ params }: Params) {
                     </li>
                   ))}
                 </ul>
-              </Reveal>
+              </div>
             ) : null}
           </div>
         </section>
@@ -167,15 +167,15 @@ export default async function ServicePage({ params }: Params) {
         <section aria-labelledby="service-process" className="section-y border-t border-line">
           <div className="container-page">
             <SectionHeader id="service-process" heading="How it works" />
-            <Stagger as="ol" className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <ol className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
               {service.process_steps.map((s, i) => (
-                <StaggerItem as="li" key={s.id} className="border-t border-line pt-6">
+                <li key={s.id} className="border-t border-line pt-6">
                   <span className={cn("font-display text-sm font-semibold", a.text)}>Step {i + 1}</span>
                   <h3 className="type-h3 mt-3">{s.title}</h3>
                   {s.description ? <p className="mt-2 text-muted">{s.description}</p> : null}
-                </StaggerItem>
+                </li>
               ))}
-            </Stagger>
+            </ol>
           </div>
         </section>
       ) : null}

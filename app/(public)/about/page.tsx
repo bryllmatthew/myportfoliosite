@@ -4,7 +4,6 @@ import { PageHero } from "@/components/public/section";
 import { RichText } from "@/components/public/rich-text";
 import { CtaSection } from "@/components/public/home/sections";
 import { CmsImage } from "@/components/media/cms-image";
-import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { Tag } from "@/components/ui/misc";
 import { getPageSettings, getProfile, getSiteSettings, getSocialLinks } from "@/lib/queries/public";
@@ -36,13 +35,13 @@ export default async function AboutPage() {
       <section aria-label="Biography" className="pb-20">
         <div className="container-page grid gap-12 lg:grid-cols-12">
           {profile?.avatar_url ? (
-            <Reveal className="lg:col-span-4">
+            <div className="lg:col-span-4">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] border border-line bg-ink-raised">
                 <CmsImage src={profile.avatar_url} alt={profile.display_name ? `Portrait of ${profile.display_name}` : "Portrait"} sizes="(min-width: 1024px) 33vw, 100vw" priority />
               </div>
-            </Reveal>
+            </div>
           ) : null}
-          <Reveal className={profile?.avatar_url ? "lg:col-span-7 lg:col-start-6" : "lg:col-span-8"} delay={0.1}>
+          <div className={profile?.avatar_url ? "lg:col-span-7 lg:col-start-6" : "lg:col-span-8"}>
             {profile?.short_bio ? <p className="font-display text-2xl font-medium leading-snug sm:text-[1.75rem]">{profile.short_bio}</p> : null}
             <RichText content={profile?.long_bio} className="mt-8" />
             <div className="mt-10 flex flex-wrap gap-3">
@@ -56,7 +55,7 @@ export default async function AboutPage() {
                 </ButtonLink>
               ) : null}
             </div>
-          </Reveal>
+          </div>
         </div>
       </section>
 
@@ -83,9 +82,9 @@ export default async function AboutPage() {
             <h2 id="experience" className="type-h2 lg:col-span-4">
               Experience
             </h2>
-            <Stagger as="ol" className="relative border-l border-line lg:col-span-8">
+            <ol className="relative border-l border-line lg:col-span-8">
               {profile.experience.map((e, i) => (
-                <StaggerItem as="li" key={`${e.role}-${i}`} className="relative pb-10 pl-8 last:pb-0">
+                <li key={`${e.role}-${i}`} className="relative pb-10 pl-8 last:pb-0">
                   <span aria-hidden className="absolute -left-[5px] top-2 size-[9px] rounded-full bg-signal ring-4 ring-ink" />
                   {e.period ? <p className="text-sm text-subtle">{e.period}</p> : null}
                   <h3 className="type-h3 mt-1">
@@ -93,9 +92,9 @@ export default async function AboutPage() {
                     {e.organization ? <span className="text-muted">, {e.organization}</span> : null}
                   </h3>
                   {e.description ? <p className="mt-2 max-w-2xl text-muted">{e.description}</p> : null}
-                </StaggerItem>
+                </li>
               ))}
-            </Stagger>
+            </ol>
           </div>
         </section>
       ) : null}

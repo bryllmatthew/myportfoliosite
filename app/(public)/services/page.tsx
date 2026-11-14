@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Layers } from "lucide-react";
 import { PageHero } from "@/components/public/section";
-import { ServiceCard } from "@/components/public/cards";
-import { CtaSection } from "@/components/public/home/sections";
-import { Stagger, StaggerItem } from "@/components/motion/reveal";
+import { CtaSection, ServiceRailList } from "@/components/public/home/sections";
 import { EmptyState } from "@/components/ui/misc";
 import { getPageSettings, getServices, getSiteSettings } from "@/lib/queries/public";
 import { buildPageMetadata } from "@/lib/seo/metadata";
@@ -24,13 +22,7 @@ export default async function ServicesPage() {
       <section aria-label="Service list" className="pb-24">
         <div className="container-page">
           {services.length ? (
-            <Stagger className="grid gap-5 md:grid-cols-2 lg:gap-6">
-              {services.map((s) => (
-                <StaggerItem key={s.id}>
-                  <ServiceCard service={s} />
-                </StaggerItem>
-              ))}
-            </Stagger>
+            <ServiceRailList services={services} className="border-t border-line" />
           ) : (
             <EmptyState icon={<Layers />} title="Services are being updated" description="Get in touch to talk about what you need." />
           )}

@@ -137,7 +137,7 @@ export function ContactForm({ services, budgetRanges, showBudget, fallbackEmail 
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field id="company" label="Company" hint="Optional" error={errors.company?.message}>
+        <Field id="company" label="Company (optional)" error={errors.company?.message}>
           {(aria) => <Input {...aria} autoComplete="organization" {...register("company")} />}
         </Field>
         <Field id="service_id" label="What do you need help with?" error={errors.service_id?.message}>
@@ -155,7 +155,7 @@ export function ContactForm({ services, budgetRanges, showBudget, fallbackEmail 
       </div>
 
       {showBudget && budgetRanges.length ? (
-        <Field id="budget_range" label="Budget" hint="Optional. Helps me suggest the right scope." error={errors.budget_range?.message}>
+        <Field id="budget_range" label="Budget (optional)" hint="Helps me suggest the right scope." error={errors.budget_range?.message}>
           {(aria) => (
             <Select {...aria} {...register("budget_range")}>
               <option value="">Prefer not to say</option>

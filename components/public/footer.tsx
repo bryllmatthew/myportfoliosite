@@ -113,7 +113,6 @@ export function Footer({ site, profile, contact, items, social }: FooterProps) {
           <p>
             © {year} {name}. All rights reserved.
           </p>
-          <p className="text-subtle">{profile?.location_label}</p>
         </div>
       </div>
     </footer>

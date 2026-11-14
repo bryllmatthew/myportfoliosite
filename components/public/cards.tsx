@@ -4,13 +4,12 @@ import { cn } from "@/lib/utils/cn";
 import { CmsImage } from "@/components/media/cms-image";
 import { Spotlight } from "@/components/motion/spotlight";
 import { CountUp } from "@/components/motion/count-up";
-import { accentFor } from "@/components/ui/misc";
+
 import { displayClient, formatDateRange, formatMetric, formatMonthYear } from "@/lib/utils/format";
 import type {
   CaseStudyMetric,
   CaseStudyWithRelations,
   ProjectWithRelations,
-  ServiceWithChildren,
   Testimonial,
 } from "@/types/content";
 
@@ -43,7 +42,6 @@ export function ProjectCard({
               src={project.cover_image_url}
               alt={project.cover_image_alt || ""}
               sizes={size === "panorama" ? "(min-width: 1280px) 1200px, 100vw" : size === "wide" ? "(min-width: 1024px) 66vw, 100vw" : "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"}
-              placeholderLabel={project.title}
               accent={accent}
               priority={priority}
             />
@@ -102,22 +100,40 @@ export function MetricValue({
   return <span className={className}>{formatMetric(metric)}</span>;
 }
 
-export function MetricCard({ metric, emphasis }: { metric: CaseStudyMetric; emphasis?: boolean }) {
+/**
+ * The leading result, set as type rather than a boxed stat tile:
+ * the number, then what it measures, then its context.
+ */
+export function PrimaryResult({ metric, className }: { metric: CaseStudyMetric; className?: string }) {
   return (
-    <dl
-      className={cn(
-        "flex h-full flex-col justify-between gap-6 rounded-[var(--radius-card)] border p-5 sm:p-6",
-        emphasis ? "border-signal/40 bg-signal/[0.06]" : "border-line bg-surface/50",
-      )}
-    >
-      <dt className="text-sm font-medium text-muted">{metric.label}</dt>
-      <dd>
-        <MetricValue
-          metric={metric}
-          className={cn("type-metric block", emphasis ? "text-[clamp(2.75rem,6vw,4.5rem)] text-signal" : "text-[clamp(2rem,4vw,2.75rem)]")}
-        />
-        {metric.description ? <p className="mt-3 text-sm text-subtle">{metric.description}</p> : null}
+    <dl className={cn("flex flex-col-reverse", className)}>
+      <dt className="mt-4 max-w-sm">
+        <span className="block text-lg font-medium text-paper">{metric.label}</span>
+        {metric.description ? <span className="mt-1 block text-sm text-muted">{metric.description}</span> : null}
+      </dt>
+      <dd className="type-metric text-[clamp(4rem,10vw,8rem)] text-signal">
+        <MetricValue metric={metric} />
       </dd>
+    </dl>
+  );
+}
+
+/** Supporting results as a ruled ledger row. */
+export function MetricLedger({ metrics, className }: { metrics: CaseStudyMetric[]; className?: string }) {
+  if (!metrics.length) return null;
+  return (
+    <dl className={cn("grid grid-cols-2 border-t border-line sm:grid-cols-[repeat(auto-fit,minmax(9rem,1fr))]", className)}>
+      {metrics.map((m) => (
+        <div key={m.id} className="flex flex-col-reverse gap-1.5 border-b border-line py-5 pr-4">
+          <dt className="text-sm text-muted">
+            {m.label}
+            {m.description ? <span className="mt-0.5 block text-xs text-subtle">{m.description}</span> : null}
+          </dt>
+          <dd className="type-metric text-[clamp(1.75rem,3vw,2.375rem)] text-paper">
+            <MetricValue metric={m} />
+          </dd>
+        </div>
+      ))}
     </dl>
   );
 }
@@ -160,40 +176,6 @@ export function CaseStudyCard({ caseStudy }: { caseStudy: CaseStudyWithRelations
         </div>
       </article>
     </Spotlight>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Service
-// ---------------------------------------------------------------------------
-export function ServiceCard({ service }: { service: ServiceWithChildren }) {
-  const a = accentFor(service.accent_key);
-  return (
-    <article className="group relative flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-surface/50 p-6 transition-colors duration-300 hover:border-line-strong sm:p-8">
-      <span aria-hidden className={cn("size-2.5 rounded-full", a.dot)} />
-      <h3 className="type-h3 mt-6">
-        <Link
-          href={`/services/${service.slug}`}
-          className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
-        >
-          {service.title}
-        </Link>
-      </h3>
-      <p className="mt-3 text-muted">{service.short_description}</p>
-      {service.capabilities.length ? (
-        <ul className="mt-6 flex flex-wrap gap-2" aria-label={`${service.title} capabilities`}>
-          {service.capabilities.slice(0, 5).map((c) => (
-            <li key={c.id} className={cn("rounded-full border px-3 py-1 text-[0.8125rem] text-paper/85", a.border)}>
-              {c.title}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-      <span className={cn("mt-auto inline-flex items-center gap-1.5 pt-8 text-sm font-medium", a.text)} aria-hidden>
-        Explore {service.title.toLowerCase()}
-        <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-      </span>
-    </article>
   );
 }
 
