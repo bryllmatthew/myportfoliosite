@@ -1,0 +1,49 @@
+{
+  "name": "portfolio-cms",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Professional portfolio with a Supabase-powered admin CMS.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run lint && npm run typecheck && npm run build",
+    "test:rls": "node scripts/verify-rls.mjs",
+    "admin:create": "node --env-file=.env.local scripts/create-admin.mjs"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^7.0.6",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.72.0",
+    "motion": "^14.14.0",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-hook-form": "^7.92.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "16.4.6",
+    "tailwindcss": "^4.3.5",
+    "typescript": "5.9.3"
+  }
+}
