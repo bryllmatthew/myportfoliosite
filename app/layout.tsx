@@ -1,13 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
+import { Instrument_Sans, Inter } from "next/font/google";
 import { getSiteSettings } from "@/lib/queries/public";
 import { getSiteUrl } from "@/lib/utils/site-url";
 import "./globals.css";
 
-const display = Bricolage_Grotesque({
+const display = Inter({
   subsets: ["latin"],
-  variable: "--font-bricolage",
-  axes: ["opsz", "wdth"],
+  variable: "--font-display-face",
   display: "swap",
 });
 
