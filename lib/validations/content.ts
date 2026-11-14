@@ -360,6 +360,7 @@ export const homeConfigSchemas = {
     steps: z.array(z.object({ title: requiredText(80, "Step title"), description: text(400) })).max(8),
   }),
   stack: z.object({}),
+  video: z.object({ video_url: optionalUrl, poster_url: optionalUrl, caption: text(300) }),
   testimonials: z.object({ testimonial_ids: z.array(uuid).max(12) }),
   cta: z.object({ primary_cta: cta, secondary_cta: cta }),
 } as const;

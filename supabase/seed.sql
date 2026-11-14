@@ -334,11 +334,21 @@ insert into public.home_sections (section_key, eyebrow, heading, description, is
    ]}'::jsonb),
   ('stack', null, 'Tools I work in',
    'Chosen for reliability and for how well they connect to each other.', true, 9, '{}'::jsonb),
-  ('testimonials', null, 'What clients say', null, true, 10, '{"testimonial_ids": []}'::jsonb),
+  ('video', 'Client review', 'Hear it from a client', null, true, 10,
+   '{"video_url": "", "poster_url": "", "caption": ""}'::jsonb),
+  ('testimonials', null, 'What clients say', null, true, 11, '{"testimonial_ids": []}'::jsonb),
   ('cta', null, 'Have something to build, automate or sell?',
    'Tell me where you are stuck. I will reply with a clear next step.',
-   true, 11, '{"primary_cta": {"label": "Let''s work together", "url": "/contact"}, "secondary_cta": {"label": "See services", "url": "/services"}}'::jsonb)
+   true, 12, '{"primary_cta": {"label": "Let''s work together", "url": "/contact"}, "secondary_cta": {"label": "See services", "url": "/services"}}'::jsonb)
 on conflict (section_key) do nothing;
+
+-- Client video review, only while the module has no video yet.
+update public.home_sections
+set config = jsonb_build_object(
+  'video_url', 'https://oudkjpixgxemxougiioz.supabase.co/storage/v1/object/public/public-media/library/44bcd34d-e4f4-4235-80f9-bebc858d3f08/client-review.mp4',
+  'poster_url', 'https://oudkjpixgxemxougiioz.supabase.co/storage/v1/object/public/public-media/library/client-review-poster/client-review-poster.jpg',
+  'caption', '')
+where section_key = 'video' and coalesce(config->>'video_url', '') = '';
 
 -- ---------------------------------------------------------------------------
 -- Imported from the previous portfolio (bryllmsark.wixstudio.com/portfolio).

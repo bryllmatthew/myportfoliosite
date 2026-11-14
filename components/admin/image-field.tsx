@@ -25,7 +25,8 @@ export function ImageField({ name, label, hint, altName, entity, imagesOnly = tr
   const [broken, setBroken] = useState(false);
   const err = (get(formState.errors, name) as { message?: string } | undefined)?.message;
   const id = `f-${name.replace(/[.[\]]/g, "-")}`;
-  const isImage = /\.(jpe?g|png|webp|avif|gif)(\?|$)/i.test(url) || url.includes("/storage/v1/object/public/");
+  const isVideo = /\.(mp4|webm|mov)(\?|$)/i.test(url);
+  const isImage = !isVideo && (/\.(jpe?g|png|webp|avif|gif)(\?|$)/i.test(url) || url.includes("/storage/v1/object/public/"));
 
   return (
     <div className="flex flex-col gap-3">
@@ -38,7 +39,7 @@ export function ImageField({ name, label, hint, altName, entity, imagesOnly = tr
               Library
             </Button>
             {url ? (
-              <Button variant="ghost" size="icon" aria-label="Remove image" onClick={() => setValue(name, "", { shouldDirty: true, shouldValidate: true })}>
+              <Button variant="ghost" size="icon" aria-label={isVideo ? "Remove video" : "Remove image"} onClick={() => setValue(name, "", { shouldDirty: true, shouldValidate: true })}>
                 <Trash2 aria-hidden />
               </Button>
             ) : null}
@@ -53,6 +54,11 @@ export function ImageField({ name, label, hint, altName, entity, imagesOnly = tr
             // eslint-disable-next-line @next/next/no-img-element -- live preview of an arbitrary admin-provided URL
             <img src={url} alt="" className="h-full w-full object-cover" onError={() => setBroken(true)} />
           )}
+        </div>
+      ) : null}
+      {url && isVideo ? (
+        <div className="w-full max-w-sm overflow-hidden rounded-xl border border-line bg-black">
+          <video src={url} controls preload="metadata" playsInline className="aspect-video h-auto w-full" aria-label="Video preview" />
         </div>
       ) : null}
       <MediaPicker

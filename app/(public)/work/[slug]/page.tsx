@@ -113,7 +113,7 @@ export default async function ProjectPage({ params }: Params) {
             <div className="mt-8 flex flex-wrap gap-3">
               {project.external_url ? (
                 <ButtonLink href={project.external_url} variant="secondary" data-track="external_portfolio_link" data-track-label={`project live: ${project.slug}`}>
-                  Visit the live project
+                  {/\.pdf(\?|#|$)/i.test(project.external_url) ? "View the PDF" : "Visit the live project"}
                   <ArrowUpRight aria-hidden />
                 </ButtonLink>
               ) : null}

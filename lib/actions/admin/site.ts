@@ -381,6 +381,7 @@ const URL_REFERENCES: { table: string; columns: string[]; label: string }[] = [
   { table: "profiles", columns: ["avatar_url", "resume_url"], label: "Profile" },
   { table: "site_settings", columns: ["default_og_image"], label: "Site settings" },
   { table: "page_settings", columns: ["og_image_url"], label: "Page SEO" },
+  { table: "home_sections", columns: ["config->>video_url", "config->>poster_url"], label: "Homepage" },
 ];
 
 export async function listMedia(search?: string): Promise<ActionResult<MediaLibraryItem[]>> {

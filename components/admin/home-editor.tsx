@@ -13,6 +13,7 @@ import { Select, Switch } from "@/components/ui/form-controls";
 import { Badge } from "@/components/ui/misc";
 import { NumberField, SelectField, SwitchField, TextField, TextareaField } from "@/components/admin/fields";
 import { Repeater, applyResult, onInvalid } from "@/components/admin/editor";
+import { ImageField } from "@/components/admin/image-field";
 import { reorderHomeSections, saveHomeSection, setHomeSectionVisibility } from "@/lib/actions/admin/site";
 import { homeConfigSchemas, homeSectionBaseSchema, type HomeConfigKey } from "@/lib/validations/content";
 import type { AccentKey, ContentStatus, HomeSectionKey } from "@/types/content";
@@ -82,6 +83,11 @@ const META: Record<HomeSectionKey, { title: string; description: string; fields:
   case_study: { title: "Featured case study", description: "One advertising case study, led by its main result.", fields: ["eyebrow", "heading", "description"] },
   process: { title: "Process", description: "How a project runs, step by step.", fields: ["eyebrow", "heading", "description"] },
   stack: { title: "Tools", description: "Your tools by discipline. The tools themselves are edited in Profile.", fields: ["eyebrow", "heading", "description"] },
+  video: {
+    title: "Featured video",
+    description: "One video, such as a client review. Hidden automatically until a video is chosen.",
+    fields: ["eyebrow", "heading", "description"],
+  },
   testimonials: {
     title: "Testimonials",
     description: "Client quotes. Hidden automatically until a testimonial is published.",
@@ -322,6 +328,20 @@ function ConfigFields({ sectionKey, options }: { sectionKey: HomeSectionKey; opt
       return <ProcessSteps />;
     case "stack":
       return <p className="text-sm text-muted">This section lists the tool groups from Profile. Edit them there.</p>;
+    case "video":
+      return (
+        <>
+          <ImageField
+            name="config.video_url"
+            label="Video"
+            imagesOnly={false}
+            entity="home"
+            hint="Upload an MP4 or WebM (up to 50 MB), choose one from the library, or paste a full https:// link to a video file."
+          />
+          <ImageField name="config.poster_url" label="Cover image" entity="home" hint="Shown before the video plays. A frame from the video works well." />
+          <TextField name="config.caption" label="Caption" hint="Optional. Shown under the video, for example who is speaking." />
+        </>
+      );
     case "testimonials":
       return (
         <OrderedPicker

@@ -24,7 +24,7 @@ npm install
 cp .env.example .env.local        # then fill in the values (see below)
 ```
 
-1. **Create the database schema.** Apply the three files in `supabase/migrations/` in order, then
+1. **Create the database schema.** Apply the files in `supabase/migrations/` in filename order, then
    `supabase/seed.sql`. Either:
    - Supabase CLI: `npx supabase link --project-ref <ref>` then `npx supabase db push`, then run
      `supabase/seed.sql` in the SQL editor; or
@@ -132,4 +132,6 @@ Events go to `window.dataLayer` (GTM/GA4) and a `portfolio:analytics` DOM event 
 - Images live in Supabase Storage (copied with `npm run media:import`). The 28 portfolio videos still stream
   from Wix's CDN; run `npm run media:import -- --include-videos` before retiring the Wix site.
 - The profile photo is bundled at `public/images/bryll-matthew.jpg`; replace it from **Profile** in the admin.
+- The homepage **Featured video** module (Admin → Homepage) holds the client video review. Upload a different
+  MP4/WebM there, or hide the module.
 - The four services are starter copy: review them in **Services**. Check the tools listed in **Profile**.

@@ -22,6 +22,7 @@ export const HOME_CONFIG_DEFAULTS: { [K in HomeConfigKey]: HomeConfig<K> } = {
   case_study: { case_study_id: null },
   process: { steps: [] },
   stack: {},
+  video: { video_url: "", poster_url: "", caption: "" },
   testimonials: { testimonial_ids: [] },
   cta: {
     primary_cta: { label: "Let's work together", url: "/contact" },

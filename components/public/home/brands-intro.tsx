@@ -135,3 +135,49 @@ export function IntroSection({
     </section>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Featured video (for example a client video review)
+// ---------------------------------------------------------------------------
+/** Click-to-play only: the video has sound, so it never autoplays, and nothing loads until it is played. */
+export function VideoSection({ section, config }: { section: HomeSection; config: HomeConfig<"video"> }) {
+  if (!config.video_url) return null;
+  const heading = section.heading || "Hear it from a client";
+  const label = config.caption || heading;
+
+  return (
+    <section aria-labelledby="home-video" className="section-y border-t border-line">
+      <div className="container-page grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-4">
+          {section.eyebrow ? (
+            <p className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-signal">
+              <span aria-hidden className="size-1.5 rounded-full bg-signal" />
+              {section.eyebrow}
+            </p>
+          ) : null}
+          <h2 id="home-video" className="type-h2">
+            {heading}
+          </h2>
+          {section.description ? <p className="type-lead mt-5">{section.description}</p> : null}
+        </div>
+        <Reveal className="lg:col-span-8">
+          <figure className="relative">
+            <div aria-hidden className="dot-grid absolute -bottom-5 -right-5 left-8 top-8 rounded-[var(--radius-card)] border border-line" />
+            <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line-strong bg-black">
+              <video
+                src={config.video_url}
+                poster={config.poster_url || undefined}
+                controls
+                preload="none"
+                playsInline
+                aria-label={label}
+                className="aspect-video h-auto w-full"
+              />
+            </div>
+            {config.caption ? <figcaption className="relative mt-4 text-sm text-muted">{config.caption}</figcaption> : null}
+          </figure>
+        </Reveal>
+      </div>
+    </section>
+  );
+}

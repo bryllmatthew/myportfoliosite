@@ -300,6 +300,7 @@ export type HomeSectionKey =
   | "case_study"
   | "process"
   | "stack"
+  | "video"
   | "testimonials"
   | "cta";
 
