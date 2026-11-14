@@ -27,13 +27,17 @@ export function BrandsSection({ section, brands }: { section: HomeSection; brand
         <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 sm:gap-x-10">
           {brands.map((b) => {
             const mark = b.logo_url ? (
-              <span className="relative block aspect-[4/3] w-28 mix-blend-screen invert sm:w-36">
+              // Opacity lives on the blended element itself: on a parent it would isolate the blend
+              // and the logo's white background would show as a grey tile.
+              <span className="relative block aspect-[4/3] w-28 opacity-60 mix-blend-screen invert transition-opacity duration-300 group-hover:opacity-100 sm:w-36">
                 <CmsImage src={b.logo_url} alt={b.name} sizes="144px" className="object-contain" />
               </span>
             ) : (
-              <span className="flex h-20 items-center px-2 font-display text-lg font-semibold tracking-tight text-paper sm:h-24">{b.name}</span>
+              <span className="flex h-20 items-center px-2 font-display text-lg font-semibold tracking-tight text-paper/60 transition-colors duration-300 group-hover:text-paper sm:h-24">
+                {b.name}
+              </span>
             );
-            const cls = "flex items-center justify-center opacity-60 transition-opacity duration-300";
+            const cls = "group flex items-center justify-center";
             return (
               <li key={b.id}>
                 {b.website_url ? (
@@ -43,7 +47,7 @@ export function BrandsSection({ section, brands }: { section: HomeSection; brand
                     rel="noopener noreferrer"
                     data-track="external_portfolio_link"
                     data-track-label={`brand: ${b.name}`}
-                    className={`${cls} hover:opacity-100`}
+                    className={cls}
                   >
                     {mark}
                     <span className="sr-only"> (opens in a new tab)</span>
