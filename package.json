@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run build",
     "test:rls": "node scripts/verify-rls.mjs",
-    "admin:create": "node --env-file=.env.local scripts/create-admin.mjs"
+    "admin:create": "node --env-file=.env.local scripts/create-admin.mjs",
+    "media:import": "node --env-file=.env.local scripts/import-external-media.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",

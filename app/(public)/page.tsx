@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { HomeHero } from "@/components/public/home/hero";
+import { BrandsSection, IntroSection } from "@/components/public/home/brands-intro";
 import {
   CtaSection,
   ExpertiseStrip,
@@ -12,6 +13,7 @@ import {
   TestimonialsSection,
 } from "@/components/public/home/sections";
 import {
+  getBrands,
   getHomeCaseStudy,
   getHomeProjects,
   getHomeSections,
@@ -33,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** Order used before any homepage modules exist in the CMS. */
-const DEFAULT_ORDER: HomeSectionKey[] = ["hero", "expertise", "services", "work", "case_study", "process", "stack", "testimonials", "cta"];
+const DEFAULT_ORDER: HomeSectionKey[] = ["hero", "brands", "expertise", "intro", "services", "work", "case_study", "process", "stack", "testimonials", "cta"];
 
 function placeholderSection(key: HomeSectionKey, i: number): HomeSection {
   return {
@@ -50,13 +52,14 @@ function placeholderSection(key: HomeSectionKey, i: number): HomeSection {
 }
 
 export default async function HomePage() {
-  const [stored, profile, site, services, testimonials, social] = await Promise.all([
+  const [stored, profile, site, services, testimonials, social, brands] = await Promise.all([
     getHomeSections(),
     getProfile(),
     getSiteSettings(),
     getServices(),
     getTestimonials(),
     getSocialLinks(),
+    getBrands(),
   ]);
 
   const sections = (stored.length ? stored : DEFAULT_ORDER.map(placeholderSection))
@@ -96,6 +99,10 @@ export default async function HomePage() {
             nodeLabels={expertise.items.map((i) => ({ key: i.key, label: i.label }))}
           />
         );
+      case "brands":
+        return <BrandsSection key={section.id} section={section} brands={brands} />;
+      case "intro":
+        return <IntroSection key={section.id} section={section} config={readHomeConfig("intro", section)} profile={profile} />;
       case "expertise":
         return <ExpertiseStrip key={section.id} config={expertise} />;
       case "services":

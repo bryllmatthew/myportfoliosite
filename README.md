@@ -1,4 +1,6 @@
-# Portfolio + CMS
+# Bryll Matthew — Portfolio + CMS
+
+**Live site:** https://myportfoliosite-xi.vercel.app · **Admin:** https://myportfoliosite-xi.vercel.app/admin
 
 A professional portfolio and lead-generation site with its own admin CMS, for one person working across
 **software development, AI automation, performance advertising and creative production**.
@@ -61,8 +63,9 @@ Without Supabase variables the site still builds and renders, with empty states 
 | `npm run lint` | ESLint (Next.js core web vitals + TypeScript rules) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run check` | lint + typecheck + build |
-| `npm run test:rls` | Applies all migrations + seed to an in-process Postgres and verifies 41 RLS/security rules |
-| `npm run admin:create` | Creates or promotes a CMS admin (uses the service-role key from `.env.local`) |
+| `npm run test:rls` | Applies all migrations + seed to an in-process Postgres and verifies 49 RLS/security rules |
+| `npm run admin:create` | Creates or promotes a CMS admin, or resets their password (uses the service-role key from `.env.local`) |
+| `npm run media:import` | Copies media still hosted on the old Wix site into Supabase Storage and rewrites references. Images are resized; add `--include-videos` to copy videos too |
 
 ## Architecture
 
@@ -121,10 +124,12 @@ There is no scroll-jacking.
 **Analytics.** `lib/analytics` exposes `track()` and a delegated listener for `data-track="cta_click"` etc.
 Events go to `window.dataLayer` (GTM/GA4) and a `portfolio:analytics` DOM event any vendor can subscribe to.
 
-## Content guidelines
+## Content
 
-- The seeded **services** are published. Rewrite their copy in `/admin/services`.
-- The seeded **sample projects** and **sample case study** are drafts titled "Sample:". Their metrics are
-  placeholders (`0`). Replace them with your real work or delete them. **Never publish invented results.**
-- No testimonials or social links are seeded, because those must be real. Add them in the admin.
-- Replace "Your Name" in **Profile** and **Settings** before launch.
+- Projects, advertising case studies, brands ("Brands I've worked with"), the testimonial, social links and
+  contact details were imported from the previous portfolio (bryllmsark.wixstudio.com/portfolio). Case study
+  figures are exactly as published there.
+- Images live in Supabase Storage (copied with `npm run media:import`). The 28 portfolio videos still stream
+  from Wix's CDN; run `npm run media:import -- --include-videos` before retiring the Wix site.
+- The profile photo is bundled at `public/images/bryll-matthew.jpg`; replace it from **Profile** in the admin.
+- The four services are starter copy: review them in **Services**. Check the tools listed in **Profile**.

@@ -45,9 +45,13 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90],
-    remotePatterns: supabaseHost
-      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
-      : [{ protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" }],
+    remotePatterns: [
+      supabaseHost
+        ? { protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }
+        : { protocol: "https", hostname: "*.supabase.co", pathname: "/storage/v1/object/public/**" },
+      // Media imported from the previous Wix portfolio (until moved with `npm run media:import`).
+      { protocol: "https", hostname: "static.wixstatic.com", pathname: "/media/**" },
+    ],
   },
   experimental: {
     serverActions: {

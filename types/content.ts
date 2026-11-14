@@ -271,6 +271,15 @@ export interface SocialLink {
   sort_order: number;
 }
 
+export interface Brand {
+  id: string;
+  name: string;
+  logo_url: string | null;
+  website_url: string | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
 export interface NavigationItem {
   id: string;
   area: NavArea;
@@ -283,6 +292,8 @@ export interface NavigationItem {
 
 export type HomeSectionKey =
   | "hero"
+  | "brands"
+  | "intro"
   | "expertise"
   | "services"
   | "work"

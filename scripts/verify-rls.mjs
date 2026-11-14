@@ -26,6 +26,7 @@ const USER = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
 const DRAFT_PROJECT = "22222222-2222-4222-8222-000000000001";
 const DRAFT_CASE = "33333333-3333-4333-8333-000000000001";
 const SERVICE = "11111111-1111-4111-8111-000000000001";
+const HIDDEN_BRAND = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
 
 const SUPABASE_STUBS = `
   create role anon nologin;
@@ -120,6 +121,12 @@ async function setup() {
     insert into auth.users (id, email) values
       ('${ADMIN}', 'admin@example.test'), ('${USER}', 'user@example.test');
     insert into public.admin_users (user_id, role) values ('${ADMIN}', 'admin');
+
+    -- Draft fixtures (the seed itself only contains published content).
+    insert into public.projects (id, title, slug, status) values ('${DRAFT_PROJECT}', 'Draft project', 'draft-project', 'draft');
+    insert into public.case_studies (id, title, slug, status) values ('${DRAFT_CASE}', 'Draft case study', 'draft-case-study', 'draft');
+    insert into public.case_study_metrics (case_study_id, label, value_numeric, value_text) values ('${DRAFT_CASE}', 'ROAS', 1, '1');
+    insert into public.brands (id, name, is_active) values ('${HIDDEN_BRAND}', 'Hidden brand', false);
   `);
 }
 
@@ -142,6 +149,24 @@ async function run() {
   {
     const r = await anon(`select count(*)::int as n from public.services where status = 'published'`);
     report(r.rows[0]?.n === 4, "anon can read the 4 published services", JSON.stringify(r.rows));
+  }
+  {
+    const r = await anon(`select
+      (select count(*) from public.projects)::int as projects,
+      (select count(*) from public.case_studies)::int as cases,
+      (select count(*) from public.project_media)::int as media,
+      (select count(*) from public.testimonials)::int as testimonials`);
+    const row = r.rows[0] ?? {};
+    report(row.projects === 27 && row.cases === 7 && row.media === 180 && row.testimonials === 1,
+      "anon sees exactly the imported published content (seed ran twice)", JSON.stringify(row));
+  }
+  {
+    const r = await anon(`select count(*)::int as n, bool_and(is_active) as all_active from public.brands`);
+    report(r.rows[0]?.n === 19 && r.rows[0]?.all_active === true, "anon sees the 19 active brands but not hidden ones", JSON.stringify(r.rows[0]));
+  }
+  {
+    const r = await anon(`insert into public.brands (name) values ('Evil')`);
+    report(!!r.error, "anon cannot add brands");
   }
   {
     const r = await anon(`select count(*)::int as n from public.case_study_metrics where case_study_id = $1`, [DRAFT_CASE]);
@@ -243,6 +268,14 @@ async function run() {
     report(!r.error && r.affected === 0, "non-admin cannot change site settings");
   }
   {
+    const r = await user(`insert into public.brands (name) values ('Evil')`);
+    report(!!r.error, "non-admin cannot add brands");
+  }
+  {
+    const r = await user(`update public.brands set name = 'Hacked'`);
+    report(!r.error && r.affected === 0, "non-admin cannot edit brands");
+  }
+  {
     const r = await user(`insert into public.admin_users (user_id) values ($1)`, [USER]);
     report(!!r.error, "non-admin cannot add themselves to admin_users");
   }
@@ -293,6 +326,19 @@ async function run() {
   {
     const r = await admin(`delete from public.projects where id = $1`, [DRAFT_PROJECT]);
     report(!r.error && r.affected === 1, "admin can delete a project");
+  }
+  {
+    const r = await admin(`select count(*)::int as n from public.brands`);
+    report(r.rows[0]?.n === 20, "admin sees hidden brands too");
+  }
+  {
+    const r = await admin(`with b as (insert into public.brands (name, is_active) values ('New brand', true) returning id) delete from public.brands where id in (select id from b)`);
+    report(!r.error, "admin can add and remove brands", r.error?.message);
+  }
+  {
+    const r = await admin(`select section_key from public.home_sections order by sort_order`);
+    const keys = r.rows.map((x) => x.section_key).join(",");
+    report(keys === "hero,brands,expertise,intro,services,work,case_study,process,stack,testimonials,cta", "homepage modules are in the intended order", keys);
   }
   {
     const r = await admin(`select count(*)::int as n from public.inquiries`);

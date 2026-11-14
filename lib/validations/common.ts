@@ -28,19 +28,24 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
-/** Absolute http(s) URL or empty string. Rejects javascript:, data:, etc. */
+/** A file bundled with the site, e.g. /images/photo.jpg. */
+function isSitePath(value: string): boolean {
+  return value.startsWith("/") && !value.startsWith("//") && !value.includes("\\") && !value.includes("..");
+}
+
+/** Absolute http(s) URL, a site path like /images/photo.jpg, or empty. Rejects javascript:, data:, etc. */
 export const optionalUrl = z
   .string()
   .trim()
   .max(2000)
-  .refine((v) => v === "" || isHttpUrl(v), { message: "Enter a full URL starting with https://" });
+  .refine((v) => v === "" || isHttpUrl(v) || isSitePath(v), { message: "Enter a full URL starting with https://" });
 
 export const requiredUrl = z
   .string()
   .trim()
   .min(1, { message: "URL is required." })
   .max(2000)
-  .refine(isHttpUrl, { message: "Enter a full URL starting with https://" });
+  .refine((v) => isHttpUrl(v) || isSitePath(v), { message: "Enter a full URL starting with https://" });
 
 /** Link targets for CTAs/navigation: site paths, http(s), mailto: or tel:. */
 export function isSafeLink(value: string): boolean {

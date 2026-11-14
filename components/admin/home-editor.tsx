@@ -66,6 +66,16 @@ interface Options {
 
 const META: Record<HomeSectionKey, { title: string; description: string; fields: ("eyebrow" | "heading" | "description")[] }> = {
   hero: { title: "Hero", description: "The first thing visitors see: headline, intro and buttons.", fields: ["heading", "description"] },
+  brands: {
+    title: "Brands I've worked with",
+    description: "Logos of brands you have worked with. Manage the logos in Brands.",
+    fields: ["eyebrow", "heading", "description"],
+  },
+  intro: {
+    title: "Introduction",
+    description: "Your photo and short bio from Profile, with a link to the About page.",
+    fields: ["eyebrow", "heading", "description"],
+  },
   expertise: { title: "Expertise strip", description: "The four disciplines under the hero.", fields: [] },
   services: { title: "Services", description: "Your services as a connected list.", fields: ["eyebrow", "heading", "description"] },
   work: { title: "Selected work", description: "A grid of chosen or featured projects.", fields: ["eyebrow", "heading", "description"] },
@@ -162,7 +172,7 @@ function OrderedPicker({ name, label, hint, options, emptyText }: { name: string
   );
 }
 
-function CtaFields({ name, label }: { name: "config.primary_cta" | "config.secondary_cta"; label: string }) {
+function CtaFields({ name, label }: { name: "config.primary_cta" | "config.secondary_cta" | "config.cta"; label: string }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <TextField name={`${name}.label`} label={`${label} label`} hint="Leave empty to hide the button." />
@@ -270,6 +280,15 @@ function ConfigFields({ sectionKey, options }: { sectionKey: HomeSectionKey; opt
           <CtaFields name="config.primary_cta" label="Primary button" />
           <CtaFields name="config.secondary_cta" label="Secondary button" />
           <SwitchField name="config.show_availability" label="Show availability badge" description="Uses the availability text from Profile." />
+        </>
+      );
+    case "brands":
+      return <p className="text-sm text-muted">Logos come from Brands in the sidebar. Hidden automatically until a brand is active.</p>;
+    case "intro":
+      return (
+        <>
+          <p className="text-sm text-muted">The photo and short bio come from Profile. Leave the description empty to use the short bio.</p>
+          <CtaFields name="config.cta" label="Button" />
         </>
       );
     case "expertise":

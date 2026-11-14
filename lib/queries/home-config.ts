@@ -7,6 +7,8 @@ export const HOME_CONFIG_DEFAULTS: { [K in HomeConfigKey]: HomeConfig<K> } = {
     secondary_cta: { label: "View my work", url: "/work" },
     show_availability: true,
   },
+  brands: {},
+  intro: { cta: { label: "More about me", url: "/about" } },
   expertise: {
     items: [
       { key: "build", label: "Development", description: "Web apps, internal systems and SaaS" },

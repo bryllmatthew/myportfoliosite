@@ -15,6 +15,7 @@ import {
   socialLinkSchema,
   taxonomySchema,
   testimonialSchema,
+  brandSchema,
   type HomeConfigKey,
 } from "@/lib/validations/content";
 import { audit } from "@/lib/utils/audit";
@@ -195,12 +196,16 @@ export async function reorderHomeSections(keys: string[]): Promise<ActionResult>
 // =============================================================================
 const COLLECTIONS = {
   testimonials: { schema: testimonialSchema, entity: "testimonial" },
+  brands: { schema: brandSchema, entity: "brand" },
   navigation_items: { schema: navItemSchema, entity: "navigation_item" },
   social_links: { schema: socialLinkSchema, entity: "social_link" },
 } as const;
 type CollectionTable = keyof typeof COLLECTIONS;
 
 function toRow(table: CollectionTable, data: Record<string, unknown>) {
+  if (table === "brands") {
+    return { ...data, logo_url: nullable(data.logo_url as string), website_url: nullable(data.website_url as string) };
+  }
   if (table === "testimonials") {
     return {
       ...data,
@@ -372,6 +377,7 @@ const URL_REFERENCES: { table: string; columns: string[]; label: string }[] = [
   { table: "case_studies", columns: ["cover_image_url", "hero_media_url", "og_image_url"], label: "Case study" },
   { table: "case_study_media", columns: ["url", "thumbnail_url"], label: "Case study gallery" },
   { table: "testimonials", columns: ["avatar_url"], label: "Testimonial" },
+  { table: "brands", columns: ["logo_url"], label: "Brand" },
   { table: "profiles", columns: ["avatar_url", "resume_url"], label: "Profile" },
   { table: "site_settings", columns: ["default_og_image"], label: "Site settings" },
   { table: "page_settings", columns: ["og_image_url"], label: "Page SEO" },

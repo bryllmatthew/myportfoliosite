@@ -195,6 +195,19 @@ export const socialLinkSchema = z.object({
 });
 export type SocialLinkInput = z.infer<typeof socialLinkSchema>;
 
+export const brandSchema = z.object({
+  name: requiredText(80, "Brand name"),
+  logo_url: optionalUrl,
+  website_url: z
+    .string()
+    .trim()
+    .max(500)
+    .refine((v) => v === "" || /^https?:\/\//i.test(v), { message: "Use a full https:// URL." }),
+  is_active: z.boolean(),
+  sort_order: sortOrder,
+});
+export type BrandInput = z.infer<typeof brandSchema>;
+
 export const navItemSchema = z.object({
   area: z.enum(["header", "footer"]),
   label: requiredText(60, "Label"),
@@ -327,6 +340,8 @@ export const homeConfigSchemas = {
     secondary_cta: cta,
     show_availability: z.boolean(),
   }),
+  brands: z.object({}),
+  intro: z.object({ cta: cta }),
   expertise: z.object({
     items: z
       .array(

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import {
+  BadgeCheck,
   Briefcase,
   ExternalLink,
   FileSearch,
@@ -40,6 +41,7 @@ const NAV: { group: string; items: { href: string; label: string; icon: typeof H
       { href: "/admin/projects", label: "Projects", icon: Briefcase },
       { href: "/admin/case-studies", label: "Case studies", icon: LineChart },
       { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
+      { href: "/admin/brands", label: "Brands", icon: BadgeCheck },
       { href: "/admin/media", label: "Media library", icon: ImageIcon },
     ],
   },

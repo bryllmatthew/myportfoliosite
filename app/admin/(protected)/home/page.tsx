@@ -15,7 +15,7 @@ import type { HomeSectionKey } from "@/types/content";
 
 export const metadata: Metadata = { title: "Homepage" };
 
-const KEYS: HomeSectionKey[] = ["hero", "expertise", "services", "work", "case_study", "process", "stack", "testimonials", "cta"];
+const KEYS: HomeSectionKey[] = ["hero", "brands", "expertise", "intro", "services", "work", "case_study", "process", "stack", "testimonials", "cta"];
 
 export default async function HomeAdminPage() {
   const ctx = await requireAdmin();

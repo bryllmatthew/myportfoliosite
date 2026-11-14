@@ -19,6 +19,7 @@ function isOptimizable(src: string): boolean {
     const u = new URL(src);
     // Only https Supabase Storage URLs are optimized (local dev Storage is plain http on a local IP).
     if (u.protocol !== "https:") return false;
+    if (u.hostname === "static.wixstatic.com" && u.pathname.startsWith("/media/")) return true;
     if (!u.pathname.startsWith("/storage/v1/object/public/")) return false;
     return SUPABASE_HOST ? u.hostname === SUPABASE_HOST : u.hostname.endsWith(".supabase.co");
   } catch {

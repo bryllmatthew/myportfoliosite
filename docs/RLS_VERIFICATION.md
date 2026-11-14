@@ -42,7 +42,10 @@ checks as each actor:
 Also covered: draft child rows hidden (metrics), invalid email rejected, forged service id dropped, rate limit,
 audit log forgery blocked and append-only, slug format enforced, and the seed is idempotent.
 
-Last run: **41 passed, 0 failed.**
+Also covered: brands (public sees active only; only admins can write), the imported content counts, and the
+homepage module order.
+
+Last run: **49 passed, 0 failed.**
 
 ## Verifying against the real project
 

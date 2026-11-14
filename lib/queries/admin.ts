@@ -2,6 +2,7 @@ import "server-only";
 import type { AdminContext } from "@/lib/auth/admin";
 import type {
   AuditLog,
+  Brand,
   CaseStudy,
   CaseStudyWithRelations,
   ContactSettings,
@@ -161,6 +162,12 @@ export async function adminListNavigation(ctx: AdminContext): Promise<Navigation
   const { data, error } = await ctx.supabase.from("navigation_items").select("*").order("area").order("sort_order");
   fail("navigation", error);
   return (data ?? []) as NavigationItem[];
+}
+
+export async function adminListBrands(ctx: AdminContext): Promise<Brand[]> {
+  const { data, error } = await ctx.supabase.from("brands").select("*").order("sort_order").order("name");
+  fail("brands", error);
+  return (data ?? []) as Brand[];
 }
 
 export async function adminListSocial(ctx: AdminContext): Promise<SocialLink[]> {

@@ -10,7 +10,7 @@ import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { EmptyState } from "@/components/ui/misc";
 import { deleteCollectionItem, reorderCollection } from "@/lib/actions/admin/site";
 
-export type CollectionTable = "testimonials" | "navigation_items" | "social_links";
+export type CollectionTable = "testimonials" | "brands" | "navigation_items" | "social_links";
 
 export interface CollectionRow {
   id: string;

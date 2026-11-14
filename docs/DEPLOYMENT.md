@@ -9,6 +9,7 @@ Plan for about 20 minutes the first time.
    1. `supabase/migrations/20261114000001_schema.sql`
    2. `supabase/migrations/20261114000002_rls.sql`
    3. `supabase/migrations/20261114000003_storage.sql`
+   4. `supabase/migrations/20261115000001_brands_and_intro.sql`
 
    Choose one method:
    - **GitHub integration** (if the Supabase project is connected to this repo): merging to the production
@@ -25,6 +26,15 @@ Plan for about 20 minutes the first time.
    Nothing else is needed.
 6. **Keys:** Project Settings → API. Copy the project URL, the `anon` public key, and (for step 3 below only)
    the `service_role` key.
+
+### Move media off the old Wix site
+
+```bash
+npm run media:import                    # images, resized (about 85 MB)
+npm run media:import -- --include-videos  # optional: videos too (about 230 MB)
+```
+
+Then open **Admin → Settings → Refresh the live site**.
 
 ## 2. Create the first admin
 

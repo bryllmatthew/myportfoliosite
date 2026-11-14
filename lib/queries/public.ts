@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getPublicClient } from "@/lib/supabase/public";
 import { getAdminContext } from "@/lib/auth/admin";
 import type {
+  Brand,
   CaseStudyWithRelations,
   ContactSettings,
   HomeSection,
@@ -90,6 +91,14 @@ export const getNavigation = cache(async (area: NavArea): Promise<NavigationItem
     .order("sort_order");
   logError("navigation_items", error);
   return (data as NavigationItem[]) ?? [];
+});
+
+export const getBrands = cache(async (): Promise<Brand[]> => {
+  const db = getPublicClient();
+  if (!db) return [];
+  const { data, error } = await db.from("brands").select("*").eq("is_active", true).order("sort_order").order("name");
+  logError("brands", error);
+  return (data as Brand[]) ?? [];
 });
 
 export const getSocialLinks = cache(async (): Promise<SocialLink[]> => {
