@@ -16,7 +16,8 @@ import type { Brand, HomeSection, Profile } from "@/types/content";
 export function BrandsSection({ section, brands }: { section: HomeSection; brands: Brand[] }) {
   if (!brands.length) return null;
   return (
-    <section aria-labelledby="home-brands" className="border-b border-line py-14 md:py-16">
+    // Solid background: <main> is a stacking context, so the logos need a backdrop inside it to blend with.
+    <section aria-labelledby="home-brands" className="border-b border-line bg-ink py-14 md:py-16">
       <div className="container-page">
         <div className="mb-6 flex flex-col items-center gap-2 text-center">
           <h2 id="home-brands" className="text-sm font-medium text-muted">
