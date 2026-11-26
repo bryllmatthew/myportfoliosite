@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils/cn";
-import { CmsImage } from "@/components/media/cms-image";
+import { NaturalImage } from "@/components/media/cms-image";
 import { Reveal } from "@/components/motion/reveal";
 import { LightboxProvider, LightboxTrigger, type LightboxItem } from "@/components/media/lightbox";
 import { isVideoFile, toEmbedUrl } from "@/lib/utils/video";
@@ -31,21 +31,36 @@ export function VideoEmbed({ url, title, className }: { url: string; title: stri
   return null;
 }
 
-function GalleryItem({ item, wide, fallbackTitle, imageIndex }: { item: MediaItem; wide: boolean; fallbackTitle: string; imageIndex: number }) {
-  const caption = item.caption ? (
-    <figcaption className="mt-3 text-sm text-muted">{item.caption}</figcaption>
-  ) : null;
+function GalleryItem({
+  item,
+  fallbackTitle,
+  imageIndex,
+  sizes = "(min-width: 768px) 50vw, 100vw",
+  fitted = false,
+}: {
+  item: MediaItem;
+  fallbackTitle: string;
+  imageIndex: number;
+  sizes?: string;
+  /** Show at its own width, centred and capped in height (for a lone image), instead of filling the column. */
+  fitted?: boolean;
+}) {
+  const caption = item.caption ? <figcaption className="mt-3 text-sm text-muted">{item.caption}</figcaption> : null;
 
   if (item.media_type === "image") {
     return (
       <figure>
-        <LightboxTrigger index={imageIndex} label={`View full image: ${item.alt_text || item.caption || fallbackTitle}`}>
-          <div className={cn("relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-ink-raised", wide ? "aspect-[16/9]" : "aspect-[4/3]")}>
-            <CmsImage
+        <LightboxTrigger
+          index={imageIndex}
+          label={`View full image: ${item.alt_text || item.caption || fallbackTitle}`}
+          className={fitted ? "mx-auto w-fit max-w-full" : undefined}
+        >
+          <div className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-ink-raised">
+            <NaturalImage
               src={item.url}
               alt={item.alt_text}
-              sizes={wide ? "(min-width: 1024px) 1200px, 100vw" : "(min-width: 768px) 50vw, 100vw"}
-              className="transition-transform duration-500 group-hover/lb:scale-[1.02]"
+              sizes={sizes}
+              className={cn("transition-transform duration-500 group-hover/lb:scale-[1.02]", fitted ? "max-h-[85vh] w-auto max-w-full" : "w-full")}
             />
           </div>
         </LightboxTrigger>
@@ -81,10 +96,27 @@ function GalleryItem({ item, wide, fallbackTitle, imageIndex }: { item: MediaIte
   );
 }
 
-/** Editorial gallery: every third item spans the full width. Bounded by the CMS (max 40 items). */
+type Run = { kind: "images" | "other"; items: MediaItem[] };
+
+/** Groups consecutive images so they share a masonry block; videos and embeds sit between them, full width. */
+function toRuns(items: MediaItem[]): Run[] {
+  const runs: Run[] = [];
+  for (const item of items) {
+    const kind = item.media_type === "image" ? "images" : "other";
+    const last = runs.at(-1);
+    if (last && last.kind === "images" && kind === "images") last.items.push(item);
+    else runs.push({ kind, items: [item] });
+  }
+  return runs;
+}
+
+/**
+ * Project gallery. Every image is shown whole at its own shape (never cropped), in a
+ * two-column masonry layout (a lone image is centred), and opens in a full-screen viewer.
+ * Bounded by the CMS (max 40 items).
+ */
 export function MediaGallery({ items, title }: { items: MediaItem[]; title: string }) {
   if (!items.length) return null;
-  // Images open in a full-screen viewer, uncropped; the grid itself keeps its crops for an even layout.
   const images = items.filter((m) => m.media_type === "image");
   const viewer: LightboxItem[] = images.map((m, i) => ({
     type: "image",
@@ -92,15 +124,41 @@ export function MediaGallery({ items, title }: { items: MediaItem[]; title: stri
     alt: m.alt_text || `${title}, image ${i + 1}`,
     caption: m.caption,
   }));
+  const fallback = (item: MediaItem) => `${title}, media ${items.indexOf(item) + 1}`;
+
   return (
     <LightboxProvider items={viewer} label={`${title} images`}>
-      <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-        {items.map((item, i) => {
-          const wide = i % 3 === 0 || item.media_type !== "image";
+      <div className="flex flex-col gap-6 md:gap-8">
+        {toRuns(items).map((run) => {
+          const first = run.items[0]!;
+          if (run.kind === "other") {
+            return (
+              <Reveal key={first.id}>
+                <GalleryItem item={first} fallbackTitle={fallback(first)} imageIndex={-1} />
+              </Reveal>
+            );
+          }
+          if (run.items.length === 1) {
+            return (
+              <Reveal key={first.id}>
+                <GalleryItem
+                  item={first}
+                  fallbackTitle={fallback(first)}
+                  imageIndex={images.indexOf(first)}
+                  sizes="(min-width: 1280px) 1200px, 100vw"
+                  fitted
+                />
+              </Reveal>
+            );
+          }
           return (
-            <Reveal key={item.id} className={cn(wide && "md:col-span-2")}>
-              <GalleryItem item={item} wide={wide} fallbackTitle={`${title}, media ${i + 1}`} imageIndex={images.indexOf(item)} />
-            </Reveal>
+            <div key={first.id} className="gap-8 md:columns-2">
+              {run.items.map((item) => (
+                <Reveal key={item.id} className="mb-6 break-inside-avoid md:mb-8">
+                  <GalleryItem item={item} fallbackTitle={fallback(item)} imageIndex={images.indexOf(item)} />
+                </Reveal>
+              ))}
+            </div>
           );
         })}
       </div>

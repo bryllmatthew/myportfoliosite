@@ -95,3 +95,33 @@ export function CmsImage({ src, alt, sizes, className, priority, accent, quality
     />
   );
 }
+
+/**
+ * The whole image at its own aspect ratio (never cropped), sized by its container's width
+ * or by className limits such as max-h. Use where the picture itself is the content.
+ */
+export function NaturalImage({ src, alt, sizes, className, priority, accent, quality }: CmsImageProps) {
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) {
+    return (
+      <div className="relative aspect-[4/3] w-full">
+        <MediaPlaceholder accent={accent} />
+      </div>
+    );
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      // Placeholder ratio until the file loads; the browser then uses the image's real shape.
+      width={1600}
+      height={1200}
+      sizes={sizes}
+      priority={priority}
+      quality={quality}
+      unoptimized={!isOptimizable(src)}
+      onError={() => setFailed(true)}
+      className={cn("block h-auto", className)}
+    />
+  );
+}
