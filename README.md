@@ -134,4 +134,7 @@ Events go to `window.dataLayer` (GTM/GA4) and a `portfolio:analytics` DOM event 
 - The profile photo is bundled at `public/images/bryll-matthew.jpg`; replace it from **Profile** in the admin.
 - The homepage **Featured video** module (Admin → Homepage) holds the client video review. Upload a different
   MP4/WebM there, or hide the module.
+- The **Vertical video slider** module (Admin → Homepage) lists the 9:16 videos that slide across the homepage.
+  Add, remove or reorder them there.
+- Gallery and lead images on project and case study pages open full-screen, uncropped, when clicked.
 - The four services are starter copy: review them in **Services**. Check the tools listed in **Profile**.

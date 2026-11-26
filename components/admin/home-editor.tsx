@@ -80,6 +80,11 @@ const META: Record<HomeSectionKey, { title: string; description: string; fields:
   expertise: { title: "Expertise strip", description: "The four disciplines under the hero.", fields: [] },
   services: { title: "Services", description: "Your services as a connected list.", fields: ["eyebrow", "heading", "description"] },
   work: { title: "Selected work", description: "A grid of chosen or featured projects.", fields: ["eyebrow", "heading", "description"] },
+  reels: {
+    title: "Vertical video slider",
+    description: "Vertical (9:16) videos that slide automatically. Six show at a time on desktop. Hidden until you add a video.",
+    fields: ["eyebrow", "heading", "description"],
+  },
   case_study: { title: "Featured case study", description: "One advertising case study, led by its main result.", fields: ["eyebrow", "heading", "description"] },
   process: { title: "Process", description: "How a project runs, step by step.", fields: ["eyebrow", "heading", "description"] },
   stack: { title: "Tools", description: "Your tools by discipline. The tools themselves are edited in Profile.", fields: ["eyebrow", "heading", "description"] },
@@ -224,6 +229,48 @@ function ExpertiseItems() {
   );
 }
 
+interface ReelItem {
+  video_url: string;
+  poster_url: string;
+  title: string;
+  link: string;
+}
+
+function ReelItems() {
+  // "config.items" means something else for the expertise strip, so this form gets its own typing.
+  const { control } = useFormContext<{ config: { items: ReelItem[] } }>();
+  const items = useFieldArray({ control, name: "config.items" });
+  const values = useWatch({ control, name: "config.items" });
+  return (
+    <Repeater
+      items={items.fields.map((f) => ({ key: f.id }))}
+      itemLabel={(i) => `Video ${i + 1}${values?.[i]?.title ? `: ${values[i]?.title}` : ""}`}
+      onAdd={() => items.append({ video_url: "", poster_url: "", title: "", link: "" })}
+      onRemove={(i) => items.remove(i)}
+      onMove={(a, b) => items.move(a, b)}
+      addLabel="Add video"
+      emptyText="No videos. The slider is hidden until you add one."
+      max={40}
+      renderItem={(i) => (
+        <div className="grid gap-4">
+          <ImageField
+            name={`config.items.${i}.video_url`}
+            label="Video"
+            imagesOnly={false}
+            entity="home"
+            hint="A vertical (9:16) MP4 or WebM. Upload one, choose from the library, or paste a full https:// link."
+          />
+          <ImageField name={`config.items.${i}.poster_url`} label="Cover image" entity="home" hint="Optional, but recommended: shown until the video plays." />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField name={`config.items.${i}.title`} label="Title" hint="Shown on the card, e.g. the brand." />
+            <TextField name={`config.items.${i}.link`} label="Link" hint="Optional. A page like /work/ai-video-commercials." />
+          </div>
+        </div>
+      )}
+    />
+  );
+}
+
 function ProcessSteps() {
   const { control } = useFormContext<SectionValues>();
   const steps = useFieldArray({ control, name: "config.steps" });
@@ -320,6 +367,13 @@ function ConfigFields({ sectionKey, options }: { sectionKey: HomeSectionKey; opt
             emptyText="Showing featured projects (or the newest, if none are featured)."
           />
           <NumberField name="config.limit" label="Maximum number of projects" hint="Between 1 and 12." />
+        </>
+      );
+    case "reels":
+      return (
+        <>
+          <SwitchField name="config.autoplay" label="Slide automatically" description="Visitors can always pause it. It never moves for people who prefer reduced motion." />
+          <ReelItems />
         </>
       );
     case "case_study":

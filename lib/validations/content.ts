@@ -355,6 +355,19 @@ export const homeConfigSchemas = {
   }),
   services: z.object({ service_ids: z.array(uuid).max(12) }),
   work: z.object({ project_ids: z.array(uuid).max(12), limit: z.number().int().min(1).max(12) }),
+  reels: z.object({
+    items: z
+      .array(
+        z.object({
+          video_url: requiredUrl,
+          poster_url: optionalUrl,
+          title: text(120),
+          link: optionalUrl,
+        }),
+      )
+      .max(40),
+    autoplay: z.boolean(),
+  }),
   case_study: z.object({ case_study_id: uuid.nullable() }),
   process: z.object({
     steps: z.array(z.object({ title: requiredText(80, "Step title"), description: text(400) })).max(8),

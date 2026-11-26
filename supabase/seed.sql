@@ -321,11 +321,14 @@ insert into public.home_sections (section_key, eyebrow, heading, description, is
   ('work', null, 'Selected work',
    'Products, systems, campaigns and creative across different industries.',
    true, 6, '{"project_ids": [], "limit": 6}'::jsonb),
+  ('reels', 'Short-form video', 'Made for TikTok, Reels and Shorts',
+   'A selection of vertical videos: product ads, UGC edits and AI commercials.', true, 7,
+   '{"items": [], "autoplay": true}'::jsonb),
   ('case_study', 'Featured advertising case study', 'Results with the context behind them',
-   null, true, 7, '{"case_study_id": null}'::jsonb),
+   null, true, 8, '{"case_study_id": null}'::jsonb),
   ('intro', null, 'Hi, I''m Bryll Matthew', null, true, 4,
    '{"cta": {"label": "More about me", "url": "/about"}}'::jsonb),
-  ('process', null, 'How a project runs', null, true, 8,
+  ('process', null, 'How a project runs', null, true, 9,
    '{"steps": [
       {"title": "Understand", "description": "We start with the business goal and how work happens today, not with a tool."},
       {"title": "Architect", "description": "I design the system: software, automations, campaigns and creative, and how they connect."},
@@ -333,13 +336,13 @@ insert into public.home_sections (section_key, eyebrow, heading, description, is
       {"title": "Optimize", "description": "We measure what changed and improve what matters most."}
    ]}'::jsonb),
   ('stack', null, 'Tools I work in',
-   'Chosen for reliability and for how well they connect to each other.', true, 9, '{}'::jsonb),
-  ('video', 'Client review', 'Hear it from a client', null, true, 10,
+   'Chosen for reliability and for how well they connect to each other.', true, 10, '{}'::jsonb),
+  ('video', 'Client review', 'Hear it from a client', null, true, 11,
    '{"video_url": "", "poster_url": "", "caption": ""}'::jsonb),
-  ('testimonials', null, 'What clients say', null, true, 11, '{"testimonial_ids": []}'::jsonb),
+  ('testimonials', null, 'What clients say', null, true, 12, '{"testimonial_ids": []}'::jsonb),
   ('cta', null, 'Have something to build, automate or sell?',
    'Tell me where you are stuck. I will reply with a clear next step.',
-   true, 12, '{"primary_cta": {"label": "Let''s work together", "url": "/contact"}, "secondary_cta": {"label": "See services", "url": "/services"}}'::jsonb)
+   true, 13, '{"primary_cta": {"label": "Let''s work together", "url": "/contact"}, "secondary_cta": {"label": "See services", "url": "/services"}}'::jsonb)
 on conflict (section_key) do nothing;
 
 -- Client video review, only while the module has no video yet.

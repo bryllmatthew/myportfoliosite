@@ -338,7 +338,7 @@ async function run() {
   {
     const r = await admin(`select section_key from public.home_sections order by sort_order`);
     const keys = r.rows.map((x) => x.section_key).join(",");
-    report(keys === "hero,brands,expertise,intro,services,work,case_study,process,stack,video,testimonials,cta", "homepage modules are in the intended order", keys);
+    report(keys === "hero,brands,expertise,intro,services,work,reels,case_study,process,stack,video,testimonials,cta", "homepage modules are in the intended order", keys);
   }
   {
     const r = await admin(`select count(*)::int as n from public.inquiries`);

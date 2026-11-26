@@ -5,9 +5,8 @@ import { Breadcrumbs } from "@/components/public/section";
 import { RichText } from "@/components/public/rich-text";
 import { CaseStudyCard, MetricLedger, PrimaryResult, primaryMetric } from "@/components/public/cards";
 import { CtaSection } from "@/components/public/home/sections";
-import { CmsImage } from "@/components/media/cms-image";
+import { HeroImage } from "@/components/media/hero-image";
 import { MediaGallery, VideoEmbed } from "@/components/media/media-gallery";
-import { ParallaxMedia } from "@/components/motion/parallax";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { TrackView } from "@/components/analytics/analytics";
 import { getCaseStudies, getCaseStudyBySlug, getPublishedSlugs } from "@/lib/queries/public";
@@ -140,9 +139,7 @@ export default async function CaseStudyPage({ params }: Params) {
           {heroIsVideo && cs.hero_media_url ? (
             <VideoEmbed url={cs.hero_media_url} title={`${cs.title} video`} />
           ) : (
-            <ParallaxMedia className="aspect-[16/9] rounded-[var(--radius-card)] border border-line bg-ink-raised">
-              <CmsImage src={heroImage} alt={cs.cover_image_alt || ""} sizes="(min-width: 1280px) 1200px, 100vw" priority quality={90} />
-            </ParallaxMedia>
+            heroImage ? <HeroImage src={heroImage} alt={cs.cover_image_alt || ""} title={cs.title} /> : null
           )}
         </div>
       ) : null}

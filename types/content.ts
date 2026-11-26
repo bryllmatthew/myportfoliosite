@@ -297,6 +297,7 @@ export type HomeSectionKey =
   | "expertise"
   | "services"
   | "work"
+  | "reels"
   | "case_study"
   | "process"
   | "stack"

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { HomeHero } from "@/components/public/home/hero";
+import { ReelsSection } from "@/components/public/home/reels";
 import { BrandsSection, IntroSection, VideoSection } from "@/components/public/home/brands-intro";
 import {
   CtaSection,
@@ -35,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** Order used before any homepage modules exist in the CMS. */
-const DEFAULT_ORDER: HomeSectionKey[] = ["hero", "brands", "expertise", "intro", "services", "work", "case_study", "process", "stack", "video", "testimonials", "cta"];
+const DEFAULT_ORDER: HomeSectionKey[] = ["hero", "brands", "expertise", "intro", "services", "work", "reels", "case_study", "process", "stack", "video", "testimonials", "cta"];
 
 function placeholderSection(key: HomeSectionKey, i: number): HomeSection {
   return {
@@ -109,6 +110,8 @@ export default async function HomePage() {
         return <ServicesRail key={section.id} section={section} services={chosenServices} />;
       case "work":
         return <SelectedWork key={section.id} section={section} projects={projects} />;
+      case "reels":
+        return <ReelsSection key={section.id} section={section} config={readHomeConfig("reels", section)} />;
       case "case_study":
         return <FeaturedCaseStudy key={section.id} section={section} caseStudy={featuredCase} />;
       case "process":

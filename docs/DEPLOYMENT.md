@@ -11,6 +11,7 @@ Plan for about 20 minutes the first time.
    3. `supabase/migrations/20261114000003_storage.sql`
    4. `supabase/migrations/20261115000001_brands_and_intro.sql`
    5. `supabase/migrations/20261116000001_home_video.sql`
+   6. `supabase/migrations/20261127000001_home_reels.sql`
 
    Choose one method:
    - **GitHub integration** (if the Supabase project is connected to this repo): merging to the production

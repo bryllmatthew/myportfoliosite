@@ -19,6 +19,7 @@ export const HOME_CONFIG_DEFAULTS: { [K in HomeConfigKey]: HomeConfig<K> } = {
   },
   services: { service_ids: [] },
   work: { project_ids: [], limit: 6 },
+  reels: { items: [], autoplay: true },
   case_study: { case_study_id: null },
   process: { steps: [] },
   stack: {},
